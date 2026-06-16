@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>⚡ FX Auto Trade HQ</title>
+<style>
+:root {
+  --bg: #0d1117;
+  --card: #161b22;
+  --card2: #1c2128;
+  --border: #30363d;
+  --text: #e6edf3;
+  --muted: #8b949e;
+  --green: #3fb950;
+  --red: #f85149;
+  --yellow: #d29922;
+  --blue: #58a6ff;
+  --purple: #bc8cff;
+  --orange: #e3884c;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;min-height:100vh}
+
+/* NAV */
+.nav{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--card);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+.logo{font-size:16px;font-weight:700;color:var(--blue)}
+.nav-right{display:flex;align-items:center;gap:12px}
+.clock{font-family:monospace;font-size:13px;color:var(--muted)}
+.btn{padding:6px 12px;border:1px solid var(--border);border-radius:6px;background:var(--card2);color:var(--text);cursor:pointer;font-size:12px}
+.btn:hover{background:var(--border)}
+
+/* STATUS BAR */
+.status-bar{display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:10px 16px;background:var(--card2);border-bottom:1px solid var(--border)}
+.risk-badge{padding:4px 12px;border-radius:20px;font-weight:700;font-size:13px}
+.risk-low{background:rgba(63,185,80,.15);color:var(--green);border:1px solid var(--green)}
+.risk-mid{background:rgba(210,153,34,.15);color:var(--yellow);border:1px solid var(--yellow)}
+.risk-high{background:rgba(248,81,73,.15);color:var(--red);border:1px solid var(--red)}
+.currency-pills{display:flex;gap:8px}
+.pill{padding:3px 10px;border-radius:12px;font-size:12px;font-weight:600;background:var(--card);border:1px solid var(--border)}
+.pill.up{color:var(--green)}
+.pill.down{color:var(--red)}
+.pill.flat{color:var(--muted)}
+.status-bar .muted{margin-left:auto;font-size:12px;color:var(--muted)}
+.refresh-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);margin-right:4px;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* MAIN */
+.main{padding:12px 16px;max-width:1400px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+
+/* SECTION HEADER */
+.sec-hdr{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.sec-hdr h2{font-size:15px;font-weight:600}
+.sec-icon{font-size:16px}
+.badge{padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;background:rgba(88,166,255,.15);color:var(--blue);border:1px solid rgba(88,166,255,.3)}
+.badge.morning{background:rgba(210,153,34,.15);color:var(--yellow);border-color:rgba(210,153,34,.3)}
+.badge.evening{background:rgba(188,140,255,.15);color:var(--purple);border-color:rgba(188,140,255,.3)}
+
+/* CARD */
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px}
+.card-hdr{font-size:13px;font-weight:600;color:var(--muted);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+
+/* CEO SECTION */
+.ceo-card{background:linear-gradient(135deg,#161b22 0%,#1a2035 100%);border:1px solid #2d3f6a;border-radius:10px;padding:16px}
+.ceo-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:12px}
+.ceo-sub{background:rgba(0,0,0,.2);border-radius:8px;padding:12px}
+.ceo-sub h3{font-size:12px;font-weight:600;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
+.ceo-decision-text{font-size:14px;line-height:1.6;color:var(--text)}
+
+/* GRIDS */
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* NEWS FEED */
+.news-item{padding:8px 0;border-bottom:1px solid var(--border)}
+.news-item:last-child{border-bottom:none}
+.news-stars{color:var(--yellow);font-size:11px}
+.news-headline{font-size:13px;margin:2px 0;line-height:1.4}
+.news-impact{font-size:11px;color:var(--muted)}
+.tag{display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:600;margin-right:4px}
+.tag-crit{background:rgba(248,81,73,.2);color:var(--red)}
+.tag-imp{background:rgba(210,153,34,.2);color:var(--yellow)}
+.tag-watch{background:rgba(63,185,80,.2);color:var(--green)}
+
+/* CENTRAL BANKS */
+.cb-table{width:100%;border-collapse:collapse;font-size:12px}
+.cb-table th{color:var(--muted);padding:4px 6px;text-align:left;font-weight:500}
+.cb-table td{padding:5px 6px;border-top:1px solid var(--border)}
+.stance-hawk{color:var(--red)}
+.stance-dove{color:var(--blue)}
+.stance-neu{color:var(--yellow)}
+
+/* CURRENCY BIAS */
+.bias-grid{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.bias-row{display:flex;align-items:center;gap:8px}
+.bias-ccy{width:36px;font-weight:700;font-size:13px}
+.bias-bar-wrap{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.bias-bar{height:100%;border-radius:3px;transition:width .5s}
+.bias-bar.pos{background:var(--green)}
+.bias-bar.neg{background:var(--red)}
+.bias-bar.neu{background:var(--yellow)}
+.bias-label{font-size:11px;color:var(--muted);width:60px;text-align:right}
+
+/* TECHNICAL */
+.pair-block{margin-bottom:12px}
+.pair-name{font-size:13px;font-weight:700;margin-bottom:6px}
+.pair-price{font-size:20px;font-weight:700;font-family:monospace}
+.pair-price.up{color:var(--green)}
+.pair-price.down{color:var(--red)}
+.pair-levels{display:flex;flex-direction:column;gap:3px;margin-top:6px;font-size:11px}
+.level-row{display:flex;justify-content:space-between}
+.level-label{color:var(--muted)}
+.level-val{font-family:monospace;font-weight:600}
+.level-val.res{color:var(--red)}
+.level-val.sup{color:var(--green)}
+.signal-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;margin-top:4px}
+.signal-buy{background:rgba(63,185,80,.2);color:var(--green)}
+.signal-sell{background:rgba(248,81,73,.2);color:var(--red)}
+.signal-neu{background:rgba(139,148,158,.2);color:var(--muted)}
+
+/* EA STATUS */
+.ea-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.ea-card{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:10px}
+.ea-name{font-size:12px;font-weight:600;margin-bottom:4px}
+.ea-status{display:flex;align-items:center;gap:6px;font-size:12px}
+.ea-dot{width:8px;height:8px;border-radius:50%}
+.ea-dot.running{background:var(--green);box-shadow:0 0 6px var(--green)}
+.ea-dot.paused{background:var(--yellow)}
+.ea-dot.stopped{background:var(--red)}
+.ea-action{font-size:11px;color:var(--muted);margin-top:4px}
+
+/* ANALYST INTELLIGENCE */
+.intel-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.intel-item{padding:6px 0;border-bottom:1px solid var(--border);font-size:12px;line-height:1.5}
+.intel-item:last-child{border-bottom:none}
+.intel-src{font-size:10px;color:var(--purple);margin-bottom:2px}
+
+/* DECISION LOG */
+.timeline{display:flex;flex-direction:column;gap:0}
+.tl-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.tl-item:last-child{border-bottom:none}
+.tl-left{display:flex;flex-direction:column;align-items:center;width:40px;flex-shrink:0}
+.tl-dot{width:12px;height:12px;border-radius:50%;border:2px solid;flex-shrink:0}
+.tl-dot.high{border-color:var(--red);background:rgba(248,81,73,.3)}
+.tl-dot.medium{border-color:var(--yellow);background:rgba(210,153,34,.3)}
+.tl-dot.low{border-color:var(--green);background:rgba(63,185,80,.3)}
+.tl-line{width:2px;flex:1;background:var(--border);margin-top:4px}
+.tl-right{flex:1}
+.tl-time{font-size:11px;color:var(--muted);margin-bottom:4px}
+.tl-decision{font-size:13px;font-weight:600;margin-bottom:4px}
+.tl-reason{font-size:12px;color:var(--muted);line-height:1.5}
+.tl-outcome{font-size:11px;margin-top:4px;padding:3px 8px;border-radius:4px;display:inline-block}
+.tl-outcome.pending{background:rgba(139,148,158,.1);color:var(--muted)}
+.tl-outcome.success{background:rgba(63,185,80,.1);color:var(--green)}
+.tl-outcome.fail{background:rgba(248,81,73,.1);color:var(--red)}
+
+/* RISK LIST */
+.risk-list{display:flex;flex-direction:column;gap:6px}
+.risk-item{font-size:12px;padding:6px 8px;border-radius:6px;line-height:1.4}
+.risk-item.high{background:rgba(248,81,73,.08);border-left:3px solid var(--red)}
+.risk-item.medium{background:rgba(210,153,34,.08);border-left:3px solid var(--yellow)}
+.risk-item.low{background:rgba(63,185,80,.08);border-left:3px solid var(--green)}
+
+/* EA INSTRUCTIONS */
+.ea-inst-list{display:flex;flex-direction:column;gap:6px}
+.ea-inst{display:flex;align-items:flex-start;gap:6px;font-size:12px}
+.ea-inst-icon{flex-shrink:0;margin-top:1px}
+
+/* FOOTER */
+.footer{text-align:center;padding:16px;color:var(--muted);font-size:12px;border-top:1px solid var(--border);margin-top:12px}
+.no-data{color:var(--muted);font-size:13px;padding:20px;text-align:center}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .grid-3,.ceo-grid,.intel-grid{grid-template-columns:1fr}
+  .grid-2{grid-template-columns:1fr}
+  .main{padding:8px}
+  .ea-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:480px){
+  .currency-pills{display:none}
+  .ea-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="logo">⚡ FX Auto Trade HQ</div>
+  <div class="nav-right">
+    <span id="clock" class="clock">--:--:--</span>
+    <button class="btn" onclick="loadData()">↻ 更新</button>
+  </div>
+</nav>
+
+<!-- STATUS BAR -->
+<div class="status-bar" id="statusBar">
+  <span class="risk-badge risk-high" id="riskBadge">🔴 RISK: HIGH</span>
+  <div class="currency-pills" id="currencyPills">
+    <span class="pill down" id="pUSD">USD ⬇</span>
+    <span class="pill up" id="pEUR">EUR ⬆</span>
+    <span class="pill down" id="pJPY">JPY ⬇</span>
+  </div>
+  <span class="muted"><span class="refresh-dot"></span><span id="lastUpdate">読み込み中...</span></span>
+</div>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- CEO CARD -->
+  <div class="ceo-card">
+    <div class="sec-hdr">
+      <span class="sec-icon">👔</span>
+      <h2>社長ブリーフィング</h2>
+      <span class="badge morning" id="sessionBadge">🌅 朝</span>
+    </div>
+    <div class="ceo-grid">
+      <div class="ceo-sub">
+        <h3>総合判断</h3>
+        <p class="ceo-decision-text" id="ceoDecision">データ読み込み中...</p>
+      </div>
+      <div class="ceo-sub">
+        <h3>EA稼働指示</h3>
+        <div class="ea-inst-list" id="eaInstructions"><p class="no-data">--</p></div>
+      </div>
+      <div class="ceo-sub">
+        <h3>最重要リスク</h3>
+        <div class="risk-list" id="topRisks"><p class="no-data">--</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3 COLUMNS: NEWS / FUND / TECH -->
+  <div class="grid-3">
+    <!-- NEWS -->
+    <div class="card">
+      <div class="card-hdr">📰 市場トピックス</div>
+      <div id="newsFeed"><p class="no-data">データなし</p></div>
+    </div>
+    <!-- FUNDAMENTALS -->
+    <div class="card">
+      <div class="card-hdr">🏦 ファンダメンタル</div>
+      <div id="fundamentals"><p class="no-data">データなし</p></div>
+    </div>
+    <!-- TECHNICAL -->
+    <div class="card">
+      <div class="card-hdr">📊 テクニカル</div>
+      <div id="technical"><p class="no-data">データなし</p></div>
+    </div>
+  </div>
+
+  <!-- ANALYST INTELLIGENCE -->
+  <div class="card">
+    <div class="sec-hdr">
+      <span class="sec-icon">🎯</span>
+      <h2>アナリスト・市場インテリジェンス</h2>
+    </div>
+    <div class="intel-grid">
+      <div>
+        <div class="card-hdr">▶ YouTube情報</div>
+        <div id="youtubeInsights"><p class="no-data">--</p></div>
+      </div>
+      <div>
+        <div class="card-hdr">📱 SNS・市場センチメント</div>
+        <div id="socialInsights"><p class="no-data">--</p></div>
+      </div>
+      <div>
+        <div class="card-hdr">🔍 競合・業界動向</div>
+        <div id="competitorInsights"><p class="no-data">--</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EA STATUS -->
+  <div class="card">
+    <div class="sec-hdr">
+      <span class="sec-icon">🤖</span>
+      <h2>EA稼働状況</h2>
+    </div>
+    <div class="ea-grid" id="eaStatus">
+      <p class="no-data">データなし</p>
+    </div>
+  </div>
+
+  <!-- DECISION LOG -->
+  <div class="card">
+    <div class="sec-hdr">
+      <span class="sec-icon">📋</span>
+      <h2>社長判断ログ（なぜその判断をしたか）</h2>
+    </div>
+    <div class="timeline" id="decisionLog"><p class="no-data">判断ログなし</p></div>
+  </div>
+
+</main>
+
+<footer class="footer">
+  <span>FX Auto Trade HQ v1.0 &nbsp;|&nbsp; </span>
+  <span id="dataSource">読み込み中...</span>
+  <span> &nbsp;|&nbsp; 次回自動更新: <span id="nextRefresh">5分後</span></span>
+</footer>
+
+<script>
+// ============================================================
+//  CLOCK
+// ============================================================
+function updateClock() {
+  const now = new Date();
+  const jst = new Date(now.getTime() + (9 * 60 * 60 * 1000 - now.getTimezoneOffset() * 60 * 1000));
+  document.getElementById('clock').textContent =
+    jst.toISOString().replace('T', ' ').substring(0, 19) + ' JST';
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ============================================================
+//  DATA LOADING
+// ============================================================
+let refreshTimer = null;
+let nextRefreshSec = 300;
+
+async function loadData() {
+  try {
+    const res = await fetch('logs/latest.json?t=' + Date.now());
+    if (!res.ok) throw new Error('no data file');
+    const data = await res.json();
+    renderDashboard(data);
+    document.getElementById('dataSource').textContent = 'GitHub Pages配信中（自動更新データ）';
+  } catch {
+    document.getElementById('dataSource').textContent = 'データ未取得 ※ 初回のブリーフィング生成完了後に表示されます';
+  }
+}
+
+function startRefreshTimer() {
+  nextRefreshSec = 300;
+  if (refreshTimer) clearInterval(refreshTimer);
+  refreshTimer = setInterval(() => {
+    nextRefreshSec--;
+    const m = Math.floor(nextRefreshSec / 60);
+    const s = nextRefreshSec % 60;
+    document.getElementById('nextRefresh').textContent =
+      m > 0 ? `${m}分${s}秒後` : `${s}秒後`;
+    if (nextRefreshSec <= 0) {
+      loadData();
+      nextRefreshSec = 300;
+    }
+  }, 1000);
+}
+
+// ============================================================
+//  RENDER
+// ============================================================
+function renderDashboard(data) {
+  const agents = data.agents || {};
+  document.getElementById('lastUpdate').textContent =
+    '最終更新: ' + fmtTime(data.updated_at);
+
+  if (agents.ceo) renderCEO(agents.ceo);
+  if (agents.topics_collector) renderNews(agents.topics_collector);
+  if (agents.fundamental) renderFundamentals(agents.fundamental);
+  if (agents.technical) renderTechnical(agents.technical);
+  if (agents.ea_programmer) renderEaStatus(agents.ea_programmer);
+  renderDecisionLog(data.decision_history || []);
+}
+
+function renderCEO(ceo) {
+  // Risk badge
+  const rl = (ceo.risk_level || 'medium').toLowerCase();
+  const rb = document.getElementById('riskBadge');
+  rb.className = 'risk-badge ' + (rl === 'high' ? 'risk-high' : rl === 'low' ? 'risk-low' : 'risk-mid');
+  rb.textContent = rl === 'high' ? '🔴 RISK: HIGH' : rl === 'low' ? '🟢 RISK: LOW' : '🟡 RISK: MED';
+
+  // Session badge
+  const sb = document.getElementById('sessionBadge');
+  const st = ceo.session_type || 'morning';
+  sb.className = 'badge ' + st;
+  sb.textContent = st === 'morning' ? '🌅 朝' : '🌙 夜';
+
+  // Decision summary
+  document.getElementById('ceoDecision').textContent = ceo.decision_summary || '--';
+
+  // Currency bias from fundamental if available
+  if (ceo.currency_bias) updateCurrencyPills(ceo.currency_bias);
+
+  // EA Instructions
+  const ei = document.getElementById('eaInstructions');
+  if (ceo.ea_instructions && ceo.ea_instructions.length) {
+    ei.innerHTML = ceo.ea_instructions.map(e =>
+      `<div class="ea-inst">
+        <span class="ea-inst-icon">${statusIcon(e.status || 'stopped')}</span>
+        <div><strong>${e.type}</strong><br><span style="color:var(--muted)">${e.action} — ${e.reason}</span></div>
+      </div>`
+    ).join('');
+  }
+
+  // Risks
+  const tr = document.getElementById('topRisks');
+  if (ceo.risks && ceo.risks.length) {
+    tr.innerHTML = ceo.risks.map(r =>
+      `<div class="risk-item ${r.level || 'medium'}">${r.text}</div>`
+    ).join('');
+  }
+
+  // Analyst Intelligence
+  const ai = ceo.analyst_intelligence || {};
+  renderIntel('youtubeInsights', ai.youtube || [], r => `<div class="intel-item"><div class="intel-src">▶ ${r.channel || 'YouTube'}</div>${r.title || r}</div>`);
+  renderIntel('socialInsights', ai.social_media || [], r => `<div class="intel-item"><div class="intel-src">📱 ${r.source || 'SNS'}</div>${r.content || r}</div>`);
+  renderIntel('competitorInsights', ai.competitors || [], r => `<div class="intel-item"><div class="intel-src">🔍 ${r.source || '業界'}</div>${r.content || r}</div>`);
+}
+
+function renderIntel(id, items, fn) {
+  const el = document.getElementById(id);
+  if (!items.length) { el.innerHTML = '<p class="no-data">--</p>'; return; }
+  el.innerHTML = items.map(fn).join('');
+}
+
+function updateCurrencyPills(bias) {
+  for (const [ccy, info] of Object.entries(bias)) {
+    const el = document.getElementById('p' + ccy);
+    if (!el) continue;
+    const dir = info.direction || 'flat';
+    el.className = 'pill ' + (dir === 'up' ? 'up' : dir === 'down' ? 'down' : 'flat');
+    el.textContent = ccy + ' ' + (dir === 'up' ? '⬆' : dir === 'down' ? '⬇' : '→');
+  }
+}
+
+function renderNews(topics) {
+  const el = document.getElementById('newsFeed');
+  const items = [];
+  (topics.critical || []).forEach(n => items.push({...n, tag: 'crit', tagLabel: '最重要'}));
+  (topics.important || []).forEach(n => items.push({...n, tag: 'imp', tagLabel: '重要'}));
+  (topics.watch || []).forEach(n => items.push({...n, tag: 'watch', tagLabel: '注目'}));
+  if (!items.length) { el.innerHTML = '<p class="no-data">データなし</p>'; return; }
+  el.innerHTML = items.map(n =>
+    `<div class="news-item">
+      <div><span class="tag tag-${n.tag}">${n.tagLabel}</span><span class="news-stars">${'★'.repeat(n.stars||3)}</span></div>
+      <div class="news-headline">${n.headline}</div>
+      <div class="news-impact">${n.impact || ''}</div>
+    </div>`
+  ).join('');
+}
+
+function renderFundamentals(fund) {
+  const el = document.getElementById('fundamentals');
+  let html = '';
+
+  // Central banks table
+  if (fund.central_banks) {
+    html += '<table class="cb-table"><tr><th>中央銀行</th><th>スタンス</th></tr>';
+    for (const [cb, info] of Object.entries(fund.central_banks)) {
+      const cls = info.color === 'hawk' ? 'stance-hawk' : info.color === 'dove' ? 'stance-dove' : 'stance-neu';
+      html += `<tr><td><strong>${cb}</strong></td><td class="${cls}">${info.stance}</td></tr>`;
+    }
+    html += '</table>';
+  }
+
+  // Currency bias bars
+  if (fund.currency_bias) {
+    html += '<div class="bias-grid" style="margin-top:10px">';
+    for (const [ccy, info] of Object.entries(fund.currency_bias)) {
+      const w = info.barWidth || 50;
+      const dir = info.direction || 'flat';
+      const cls = dir === 'up' ? 'pos' : dir === 'down' ? 'neg' : 'neu';
+      html += `<div class="bias-row">
+        <span class="bias-ccy">${ccy}</span>
+        <div class="bias-bar-wrap"><div class="bias-bar ${cls}" style="width:${w}%"></div></div>
+        <span class="bias-label">${info.bias || ''}</span>
+      </div>`;
+    }
+    html += '</div>';
+  }
+
+  el.innerHTML = html || '<p class="no-data">データなし</p>';
+}
+
+function renderTechnical(tech) {
+  const el = document.getElementById('technical');
+  if (!tech.pairs) { el.innerHTML = '<p class="no-data">データなし</p>'; return; }
+  let html = '';
+  for (const [pair, info] of Object.entries(tech.pairs)) {
+    const dir = info.direction || 'flat';
+    const priceCls = dir === 'up' ? 'up' : dir === 'down' ? 'down' : '';
+    const sigCls = info.signal === 'buy' ? 'signal-buy' : info.signal === 'sell' ? 'signal-sell' : 'signal-neu';
+    const sigLabel = info.signal === 'buy' ? '▲ BUY' : info.signal === 'sell' ? '▼ SELL' : '→ 中立';
+    html += `<div class="pair-block">
+      <div class="pair-name">${pair} <span class="signal-badge ${sigCls}">${sigLabel}</span></div>
+      <div class="pair-price ${priceCls}">${info.current || '--'}</div>
+      <div style="font-size:11px;color:var(--muted);margin:3px 0">${info.trend || ''}</div>
+      <div class="pair-levels">`;
+    (info.resistance || []).slice().reverse().forEach(r =>
+      html += `<div class="level-row"><span class="level-label">抵抗</span><span class="level-val res">${r}</span></div>`);
+    html += `<div class="level-row" style="border-top:1px solid var(--border);padding-top:3px;margin-top:3px"><span class="level-label">現在値</span><span class="level-val" style="color:var(--blue)">${info.current || '--'}</span></div>`;
+    (info.support || []).forEach(s =>
+      html += `<div class="level-row"><span class="level-label">支持</span><span class="level-val sup">${s}</span></div>`);
+    html += `</div>`;
+    if (info.notes) html += `<div style="font-size:11px;color:var(--yellow);margin-top:4px">⚠ ${info.notes}</div>`;
+    html += `</div>`;
+  }
+  el.innerHTML = html;
+}
+
+function renderEaStatus(ea) {
+  const el = document.getElementById('eaStatus');
+  const eas = ea.eas || [];
+  if (!eas.length) { el.innerHTML = '<p class="no-data">データなし</p>'; return; }
+  const recent = [...eas].reverse().slice(0, 10);
+  el.innerHTML = recent.map(e => {
+    const sc = e.status === 'running' ? 'signal-buy' : e.status === 'paused' ? 'signal-neu' : 'signal-sell';
+    const icon = e.status === 'running' ? '🟢' : e.status === 'paused' ? '🟡' : '🔴';
+    return `<div class="ea-inst">
+      <span class="ea-inst-icon">${icon}</span>
+      <div style="flex:1">
+        <strong>${e.name}</strong>
+        <span class="signal-badge ${sc}" style="margin-left:6px">${e.last_action}</span>
+        <span style="color:var(--muted);font-size:11px;margin-left:6px">${e.confidence || ''}</span><br>
+        <span style="color:var(--muted);font-size:11px">${e.reason || ''}</span>
+        <span style="color:var(--yellow);font-size:11px;margin-left:6px">${e.market_regime || ''}</span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);text-align:right">${fmtTime(e.timestamp)}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderDecisionLog(history) {
+  const el = document.getElementById('decisionLog');
+  if (!history.length) { el.innerHTML = '<p class="no-data">判断ログなし</p>'; return; }
+  const sorted = [...history].reverse();
+  el.innerHTML = sorted.map((d, i) => {
+    const outcome = d.outcome
+      ? `<span class="tl-outcome ${d.outcome === 'success' ? 'success' : 'fail'}">${d.outcome}</span>`
+      : `<span class="tl-outcome pending">結果待ち</span>`;
+    return `<div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-dot ${d.priority || 'medium'}"></div>
+        ${i < sorted.length - 1 ? '<div class="tl-line"></div>' : ''}
+      </div>
+      <div class="tl-right">
+        <div class="tl-time">${fmtTime(d.timestamp)} &nbsp; #${d.id}</div>
+        <div class="tl-decision">${d.decision}</div>
+        <div class="tl-reason">${d.reason}</div>
+        ${outcome}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ============================================================
+//  UTILS
+// ============================================================
+function fmtTime(iso) {
+  if (!iso) return '--';
+  try {
+    const d = new Date(iso);
+    return d.toLocaleString('ja-JP', {timeZone: 'Asia/Tokyo', year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit'});
+  } catch { return iso; }
+}
+
+function statusIcon(status) {
+  return status === 'running' ? '🟢' : status === 'paused' ? '🟡' : '🔴';
+}
+
+// ============================================================
+//  INIT
+// ============================================================
+loadData();
+startRefreshTimer();
+</script>
+</body>
+</html>
