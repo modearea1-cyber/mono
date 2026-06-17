@@ -1,5 +1,99 @@
 {
-  "updated_at": null,
-  "agents": {},
-  "decision_history": []
+  "updated_at": "2026-06-17T22:17:45.806458+09:00",
+  "agents": {
+    "ceo": {
+      "timestamp": "2026-06-17T22:17:45.806458+09:00",
+      "session_type": "morning",
+      "risk_level": "high",
+      "decision_summary": "本日（6/17）は日銀が市場予想通り政策金利を1.0%へ引き上げ（1995年以来の高水準）。発表後のドル円は円安で反応し160円台半ばで推移。本日深夜（JST 18日3時）にFOMC金利発表を控え、相場は神経質な展開。ウォーシュ新FRB議長の初会見に市場の注目が集まっており、ドル乱高下リスクあり。ドイツZEW景況感がプラス転換しEURは堅調。中国小売売上高が予想を大幅下振れ（-0.6%）でリスクオフ圧力も。",
+      "currency_bias": {
+        "USD": {
+          "bias": "中立・強気",
+          "direction": "up",
+          "barWidth": 65,
+          "reason": "FOMC金利据え置き予想が優勢。ウォーシュ新議長がタカ派姿勢を示せばドル高加速。発表前は方向感出にくい。"
+        },
+        "EUR": {
+          "bias": "中立・強気",
+          "direction": "up",
+          "barWidth": 62,
+          "reason": "ドイツZEW景況感指数が+10.5と予想（-8.0）を大幅上振れ。ECBの利上げ転換期待が台頭。EURUSDは堅調推移。"
+        },
+        "JPY": {
+          "bias": "弱気",
+          "direction": "down",
+          "barWidth": 30,
+          "reason": "日銀が予想通り1%へ利上げも市場は既に織り込み済みで円安反応。FOMC結果次第でさらに円安加速の可能性。160円台半ばでの推移継続。"
+        }
+      },
+      "ea_instructions": [
+        {
+          "type": "USDJPY",
+          "action": "様子見（FOMC結果待ち）",
+          "status": "running",
+          "reason": "本日深夜（JST 18日3:00）のFOMC発表とウォーシュ新FRB議長会見まで新規エントリー見送り。発表後のボラティリティ急上昇に備え、既存ポジションはタイトなSLで管理。発表後に方向確認してからエントリー判断。"
+        }
+      ],
+      "risks": [
+        {
+          "level": "high",
+          "text": "FOMC金利発表（JST 6/18 3:00）：ウォーシュ新議長の初会見内容次第でドル円に±1円超の急変動リスク。"
+        },
+        {
+          "level": "medium",
+          "text": "日銀次回追加利上げ観測：次回会合（9月）での追加利上げ思惑がJPY相場の下値を支えるが、現時点では円安基調継続。"
+        },
+        {
+          "level": "medium",
+          "text": "中国景気悪化リスク：中国小売売上高が-0.6%（予想+0.8%）と大幅下振れ。リスクオフ時のJPY買い戻し圧力に注意。"
+        },
+        {
+          "level": "low",
+          "text": "米イラン和平進展による原油安（WTI 61ドル前後）：地政学リスク低下でリスクオンが進めばJPY売り圧力強まる可能性。"
+        }
+      ],
+      "analyst_intelligence": {
+        "youtube": [
+          {
+            "title": "USDJPY Forecast and Technical Analysis for June 10, 2026",
+            "channel": "FX Analysis Channel（Babypips系）"
+          },
+          {
+            "title": "USDJPY Forecast and Technical Analysis for June 5, 2026",
+            "channel": "FX Analysis Channel（Babypips系）"
+          }
+        ],
+        "social_media": [
+          {
+            "source": "みんかぶFX",
+            "content": "ドル円は10日線近傍での推移、FOMC結果公表を控えて動意限定的（6/17 11:50）"
+          },
+          {
+            "source": "ZAI FX",
+            "content": "ドル円ウォーシュ新議長会見に注目！ドル乱高下か？日銀は無風で通過→事前報道通りの結果。小幅円安。"
+          }
+        ],
+        "competitors": [
+          {
+            "source": "OANDA Japan",
+            "content": "日銀が政策金利引き上げ→ドル円は円安で160円台半ば。3営業日続伸。FOMCで据え置き予想も会見に注目。"
+          },
+          {
+            "source": "外為どっとコム",
+            "content": "現在値160.26円。下値サポートは21日線159.79円。FOMC前で上値も重い展開。"
+          }
+        ]
+      }
+    }
+  },
+  "decision_history": [
+    {
+      "id": 1,
+      "timestamp": "2026-06-17T22:17:45.806458+09:00",
+      "decision": "日銀1%利上げ織り込み済みで円安。本日深夜FOMC待ち・新規エントリー見送り",
+      "reason": "日銀が予想通り1.0%に利上げしたが市場反応は円安。USD/JPYは160.26近辺で3日続伸。本日深夜（JST 18日3:00）のFOMC発表とウォーシュ新FRB議長の初会見まで方向感が出にくいため、EAは様子見モードとし新規エントリーを見送る。発表後に方向確認してから判断を行う。",
+      "priority": "high",
+      "outcome": null
+    }
+  ]
 }
